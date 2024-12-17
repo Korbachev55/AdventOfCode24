@@ -1,5 +1,6 @@
 use std::fs::File;
 use std::io::{self, BufRead};
+use std::ops::Index;
 
 fn check_order(slice: &[i32]) -> bool {
 
@@ -67,6 +68,7 @@ fn main() -> io::Result<()> {
 
 
     let mut collector = 0;
+    let mut collector_2 = 0;
 
     // Read the file line by line
     for line in reader.lines() {
@@ -90,17 +92,30 @@ fn main() -> io::Result<()> {
             collector += 1;
         }
         
+        // Part 2:
+        let mut all_ok = true;
+        for index in 0..report.len() {
+            let mut partial_report: Vec<i32> = report.clone();
+            partial_report.remove(index);
+            println!("{:?}", partial_report);
+
+            if check_order(&partial_report) {
+                all_ok = false;
+            } 
+        }
+
+
+        if all_ok == false {
+            collector_2 += 1;
+        }
+
+        println!("Collector {}", collector_2);
+
+
+
 
     }
-    println!("Collector {}", collector);
-    // Part 2:
-/*     
-    for iter in 00..(slice.len() as i32)-1 {
 
-        println!("Num {}", slice[iter]);
-    }   
-
- */
 
     Ok(())
 }
