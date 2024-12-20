@@ -62,7 +62,10 @@ fn main() {
     // Generate the first 10 configurations as an example
     for _ in 0..100 {
         if let Some(config) = generator.next() {
-            println!("{:?}", config);
+            //println!("{:?}", config);
         } else { break }
     }
+
+    let mut Vec<i16> = vec![0, 1, 2];
+    println!("Vec: {:?}");
 }

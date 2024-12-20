@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::time::Instant;
+use std::iter;
 
 fn main() -> io::Result<()> {
     let file_path = "data.txt";
@@ -11,15 +12,11 @@ fn main() -> io::Result<()> {
     let file = File::open(file_path).expect("file wasn't found.");
     let reader = io::BufReader::new(file);
 
-
-
     let mut collector = 0;
-
 
     // Read the file line by line
     for line in reader.lines() {
         let line = line?; // Unwrap the Result to get the line
-
         let mut parts = line.split_whitespace();
 
 
@@ -36,12 +33,10 @@ fn main() -> io::Result<()> {
 
 
         collector += check_operations(target, integers);
-
-
     }
-    
+
+
     let duration = start.elapsed();
-    
     println!("Time taken: {:.2?}", duration);
     println!("Collector: {collector}");
 
@@ -49,6 +44,8 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
+
+// Recursive function
 fn compute(integers: &[i64], operators: &[usize]) -> i64 {
     //println!("I{:?} O{:?}", integers, operators); 
     let mut new_integers = integers.to_vec();
@@ -62,7 +59,7 @@ fn compute(integers: &[i64], operators: &[usize]) -> i64 {
             new_integers[1] = integers[0] * integers[1];
             //println!("*: {:?}", &new_integers[1..]);
         } else if operators[0] == 2 {
-            let mut concatenated = integers[0].to_string() + &integers[1].to_string();
+            let concatenated = integers[0].to_string() + &integers[1].to_string();
             new_integers[1] = concatenated.parse::<i64>().unwrap();
             //println!("||: {:?}", &new_integers[1..]);
         }
@@ -75,7 +72,7 @@ fn check_operations(target: i64, integers: Vec<i64>) -> i64 {
     let n = integers.len() - 1;
     let mut generator = ConfigGenerator::new(n);
 
-    for iter in 0..(3usize.pow(n as u32)+1) { // Iterate through all possible configurations
+    for _ in 0..(3usize.pow(n as u32)+1) { // Iterate through all possible configurations
         if let Some(config) = generator.next() {
             //println!("Generator: {:?}", config);
 
@@ -91,7 +88,8 @@ fn check_operations(target: i64, integers: Vec<i64>) -> i64 {
 }
 
 
-use std::iter;
+// Below is the base 3 generator
+
 
 struct ConfigGenerator {
     n: usize,
@@ -118,7 +116,7 @@ impl Iterator for ConfigGenerator {
     fn next(&mut self) -> Option<Self::Item> {
         if self.first {
             if self.current.iter().all(|&x| x == 2) {
-                let mut ret: Vec<usize> = iter::repeat(2).take(self.n).collect();
+                let ret: Vec<usize> = iter::repeat(2).take(self.n).collect();
                 //println!("A");
                 self.first = false;
                 return Some(ret); // We've exhausted all configurations
