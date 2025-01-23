@@ -89,8 +89,6 @@ fn check_operations(target: i64, integers: Vec<i64>) -> i64 {
 
 
 // Below is the base 3 generator
-
-
 struct ConfigGenerator {
     n: usize,
     current: Vec<usize>,
